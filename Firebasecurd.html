@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Firebase curd</title>
+
+        <style>
+            label {
+                display: inline-block;
+                font-size: 16px;
+                font-family:Arial, Helvetica, sans-serif;
+                width: 110px;
+            
+            }
+            input,
+            select{
+                width : 180px;
+                height: 30px;
+                font: size 16px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            button
+            {
+                height: 30px;
+                width: 70px;
+            }
+        </style>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+
+
+
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-22LBYS23J3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-22LBYS23J3');
+</script>
+    </head>
+    <body>
+        <label>First Name</label>
+        <input type="text" id="Fnameinp">
+        <br><br>
+
+        <label>Last Name</label>
+        <input type="text" id="FnameInp">
+        <br><br>
+
+        <label>Department</label>
+        <select id="DeptInp">
+            <option value="Development">Development</option>
+            <option value="Testing">Testing</option>
+            <option value="Management">Management</option>
+            <option value="Administration">Administration</option>
+        </select>
+        <br><br>
+
+        label>can drive</label>
+        <select id="driveInp">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+         </select>
+        <br><br>
+
+
+    <label>CNIC NO</label>
+    <input type="number" id="CnicInp">
+    <br><br>
+
+    <button id="Addbtn">Add</button>
+    <button id="Addbtn">Retrieve</button>
+    <button id="Addbtn">Update</button>
+    <button id="Addbtn">Delete</button>
+    
+    <script type="module">
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyA18_wje7Bnn442ZPeIC-tnokUCDrGG-gA",
+          authDomain: "fir-crud-6621a.firebaseapp.com",
+          projectId: "fir-crud-6621a",
+          storageBucket: "fir-crud-6621a.firebasestorage.app",
+          messagingSenderId: "784540949425",
+          appId: "1:784540949425:web:779be6cf464e68d03efb90",
+          measurementId: "G-22LBYS23J3"
+        };
+      
+        
+        const app = initializeApp(firebaseConfig);
+
+        import {getdatabase, ref, child , get , set , update , remove} from "https://console.firebase.google.com/project/fir-crud-6621a/database/fir-crud-6621a-default-rtdb/data/~2F"
+
+        const db = getdatabase();
+
+        let FnameInp = document.getElementById('FnameInp');
+        let LnameInp = document.getElementById('LnameInp');
+        let DepInp = document.getElementById('DeptInp');
+        let driveInp = document.getElementById('driveInp');
+        let CnicInp  = document.getElementById('CnicInp');
+
+        let AddBtn = document.getElementById('Addbtn');
+        let RetBtn = document.getElementById('Retbtn');
+        let UpdBtn = document.getElementById('updbtn');
+        let DelBtn = document.getElementById('Delbtn');
+        
+        function AddData(){
+set(ref(db, 'EmployeeSet/'+ CnicInp.value), {
+
+    nameofemployee: {firstname:FnameInp.Value,Lastname:LnameInp.value},
+    department : DeptInp.value,
+    candrive :(driveInp.value == "yes"),
+    cnic : Number(CnicInp.value)
+}) 
+.then(()=> {
+    alert ("data added successfully");
+})
+  .catch((error=>{
+alert("unsuccessful");
+console.log(error);
+
+  })) 
+}
+   function RetData(){
+    const dbRef = ref(db);
+
+
+    get(child(dbRef, 'EmployeeSet/'+ CnicInp.value)).then((snapshot)=>{
+        if(snapshot.exists()){
+FnameInp.value = snapshot.val().nameofemployee.firstname;
+LnameInp.value = snapshot.val().nameofemployee.lastname;
+DeptInp.value = snapshot.val().department;
+DriveInp.value = (snapshot.val().candrive)?"yes":"no";
+
+}
+        else{
+            alert("Employee does not exist");
+        }
+    })
+
+    .catch((error=> {
+alert("unsuccessful");
+console.log(error);
+
+   }   ))  
+}
+   function UpadateData(){
+update(ref(db, 'EmployeeSet/'+ CnicInp.value), {
+
+    nameofemployee: {firstname:FnameInp.Value,Lastname:LnameInp.value},
+    department : DeptInp.value,
+    candrive :(driveInp.value == "yes"),
+
+}) 
+.then(()=> {
+    alert ("data upated successfully");  
+})     
+        
+    .catch((error=> {
+alert("unsuccessful");
+console.log(error);
+
+   }   ))  
+}  
+    function deleteData(){
+remove(ref(db, 'EmployeeSet/'+ CnicInp.value))
+.then(()=> {
+    alert ("data deleted successfully");  
+})     
+        
+    .catch((error=> {
+alert("unsuccessful");
+console.log(error);
+
+   }   ))  
+}
+
+AddBtn.addEventListener('click',AddData);
+RetBtn.addEventListener('click',RetBtn);
+UpdBtn.addEventListener('click',UpdateData);
+DelBtn.addEventListener('click',DeleteData);
+
+
+
+
+        const analytics = getAnalytics(app);
+
+
+      </script>
+
+
+       
+        
+        <script src="" async defer></script>
+    </body>
+</html>
